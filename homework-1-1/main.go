@@ -24,25 +24,17 @@ func Run(in *bufio.Reader, out *bufio.Writer) {
 
 	m := make([]int, lenM)
 	for i := 0; i < lenM; i++ {
-		if i == lenM-1 {
-			fmt.Fscanln(in, &m[i])
-			break
-		}
 		fmt.Fscan(in, &m[i])
 	}
+	fmt.Fscanln(in)
 
 	n := make([]int, lenN)
 	for i := 0; i < lenN; i++ {
-		if i == lenN-1 {
-			fmt.Fscanln(in, &n[i])
-			break
-		}
 		fmt.Fscan(in, &n[i])
 	}
+	fmt.Fscanln(in)
 
-	r := merge(m, n)
-
-	fmt.Println(strings.Trim(fmt.Sprint(r), "[]"))
+	fmt.Fprintln(out, strings.Trim(fmt.Sprint(merge(m, n)), "[]"))
 
 }
 
