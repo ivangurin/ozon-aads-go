@@ -1,3 +1,4 @@
+
 package main
 
 import (
@@ -31,8 +32,8 @@ func Run(in *bufio.Reader, out *bufio.Writer) {
 	fmt.Fscanln(in, &k)
 
 	for i := range a {
-		s, _ := find(a, a[i])
-		if len(a)-s == k {
+		ind := find(a, a[i])
+		if ind == k {
 			fmt.Fprintln(out, a[i])
 			break
 		}
@@ -40,34 +41,15 @@ func Run(in *bufio.Reader, out *bufio.Writer) {
 
 }
 
-func find(m []int, pivot int) (int, int) {
+func find(m []int, v int) int {
 
 	var lenLeft int
-	var first int = -1
-	var last int = -1
-	var ind int = -1
 	for i := range m {
-		if m[i] < pivot {
+		if m[i] > v {
 			lenLeft++
 		}
-		if m[i] == pivot {
-			ind++
-			if first < 0 {
-				first = ind
-			}
-			last = ind
-		}
-
 	}
 
-	if first < 0 {
-		first = 0
-	}
-
-	if last < 0 {
-		last = 0
-	}
-
-	return lenLeft + first, lenLeft + last
+	return lenLeft + 1
 
 }
