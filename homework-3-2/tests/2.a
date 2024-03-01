@@ -1,0 +1,50 @@
+2 4
+	1 foo
+
+
+	4 bar
+3 8
+	1 foo
+	2 baz
+
+	4 bar
+
+
+
+
+5 8
+	1 new
+	2 baz
+	3 quux
+	4 bar
+	5 corge
+
+
+
+8 16
+	1 new	A replace
+	2 baz	B collide
+	3 quux
+	4 bar
+	5 corge
+
+
+	8 extra
+
+
+
+
+
+
+
+
++corge
++bar
+-
++quux
++baz
++new
++replace
++collide
++extra
+-

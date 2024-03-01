@@ -1,0 +1,31 @@
+{
+  "task": {
+    "title": "Хеш-таблица с закрытой адресацией (ДЗ 3)",
+    "number": "9",
+    "score": "10",
+    "testExamples": [
+      {
+        "input": "7\nput 1 foo\nput 3 bar\nput 1 baz\nget 3\nprint\nget 2\nget 1\n",
+        "output": "+bar\n2 4\n\t1 baz\n\n\t3 bar\n\n-\n+baz\n"
+      },
+      {
+        "input": "24\nput 1 foo\nput 4 bar\nprint\nput 2 baz\nprint\nput 3 quux\nput 1 new\nput 5 corge\nprint\nput 8 extra\nput A collide\nput B collide\nput A replace\nprint\nget 5\nget 4\nget 9\nget 3\nget 2\nget 1\nget A\nget B\nget 8\nget n\n",
+        "output": "2 4\n\t1 foo\n\n\n\t4 bar\n3 8\n\t1 foo\n\t2 baz\n\n\t4 bar\n\n\n\n\n5 8\n\t1 new\n\t2 baz\n\t3 quux\n\t4 bar\n\t5 corge\n\n\n\n8 16\n\t1 new\tA replace\n\t2 baz\tB collide\n\t3 quux\n\t4 bar\n\t5 corge\n\n\n\t8 extra\n\n\n\n\n\n\n\n\n+corge\n+bar\n-\n+quux\n+baz\n+new\n+replace\n+collide\n+extra\n-\n"
+      }
+    ],
+    "userStatus": {
+      "key": "NOT_START",
+      "label": "Новая"
+    },
+    "condition": "Даша пишет программу, анализирующую сформированные особым образом файлы, и для этого ей понадобилось реализовать хеш-таблицу со следующими свойствами:\n$\\bullet$ $\\textit{Строкой}$ называется последовательность ASCII-символов $x$ в диапазоне $33 \\le x \\le 126$.\n$\\bullet$ Ключи и значения хеш-таблицы — $\\textit{строки}$.\n$\\bullet$ Хеш $\\textit{строки}$, состоящей из символов $c_0, \\ldots c_m$ считается по формуле:\n$$hash(h_0, \\ldots, h_m) = h_0 \\cdot 33^{m} + h_1 \\cdot 33^{m-1} + \\ldots + h_{m-1} \\cdot 33 + h_m = \\sum_{i=1}^{m} h_i \\cdot 33^{m-i}$$, где $h_i = c_i - 33$ — хеш символа $c_i$ строки.\nВ рекурсивной форме:\n        $$\n        hash() = 0; hash(h_0, \\ldots, h_m) = hash(h_0, \\ldots h_{m-1}) \\cdot 33 + h_m\n        $$\n$\\bullet$ Начальная ёмкость хеш-таблицы — $4$.\n$\\bullet$ Коэффициент заполнения хеш-таблицы — $\\frac{3}{4} = 0.75$.\n$\\bullet$ Доступны операции:\n            $\\bullet$ $\\texttt{put(key, value)}$ — вставка значения \\texttt{value} по ключу \\texttt{key}(или замена значения по ключу, если этот ключ уже присутствует).\n            $\\bullet$ $\\texttt{get(key) -> value}$ — получение значения $\\texttt{value}$ по ключу $\\texttt{key}$.\n            $\\bullet$ $\\texttt{print()}$ — вывод структуры хеш-таблицы.\n$\\bullet$ Увеличение ёмкости (расширение) происходит при достижении коэффициента заполнения, то есть сразу после вставки,\nв результате которой количество уникальных ключей в таблице стало не менее $0.75$ её ёмкости.\n$\\bullet$ Ёмкость хеш-таблицы при расширении увеличивается в $2$ раза.\n$\\bullet$ Используется закрытая адресация на основе односвязных списков.\n$\\bullet$ Новые элементы в общем бакете добавляются в конец списка.\n$\\bullet$ При расширении, хеш-таблицы, элементы списка в бакете добавляются в расширенную хеш-таблицу в порядке обхода, в результате чего последовательность этих элементов в бакете разворачивается.\n        Например, если до расширения был бакет\n        $$A1 \\rightarrow A2 \\rightarrow B1 \\rightarrow A3 \\rightarrow B2$$\n        и произошло расширение, в результате которого вершины $A*$ и $B*$ отправились в различные бакеты,\n        то эти бакеты будут иметь вид:\n        $$A3 \\rightarrow A2 \\rightarrow A1$$\n        и\n        $$B2 \\rightarrow B1$$\n        Что позволяет иметь более простую операцию.\n\nПомоги Даше реализовать хеш-таблицу.",
+    "inputFormat": "stdin",
+    "outputFormat": "stdout",
+    "inputFormatDescription": "В первой строке вводится натуральное число $N$ — число операций, которые требуется выполнить.\n$N$ не превышает $2^{31}$.\n\nПоследующие $N$ строчек описывают одну из команд:\n$\\bullet$ $\\texttt{put KEY VALUE}$: записывает (или перезаписывает) пару ключ-значение,\n        где $\\texttt{KEY}$ — ключ, а $\\texttt{VALUE}$ — значение.\n$\\bullet$ $\\texttt{get KEY}$: получает значение по ключу, где $\\texttt{KEY}$ — ключ.\n$\\bullet$ $\\texttt{print}$: выводит структуру хеш-таблицы.\n\n\nПример ввода:\n$\\texttt{7}$ \n$\\texttt{put 1 foo}$\n$\\texttt{put 3 bar}$ \n$\\texttt{put 1 baz}$ \n$\\texttt{get 3}$\n$\\texttt{print}$\n$\\texttt{get 2}$\n$\\texttt{get 1}$",
+    "outputFormatDescription": "Для операции $\\texttt{put}$ ничего не выводится.\n\nДля операции $\\texttt{get}$, обнаружившей значение $\\texttt{VALUE}$\nвыводится значение после символа <<плюс>> без пробелов ($\\texttt{+VALUE}$) и перенос строки,\nесли значение не обнаружено, то выводится символ <<минус>> ($\\texttt{-}$) и перенос строки.\n\nДля операции $\\texttt{print}$ выводится пара из размера $\\texttt{SIZE}$ и ёмкости $\\texttt{CAPACITY}$ через пробел ($\\texttt{SIZE CAPACITY}$) и перенос строки.\nПоследующие $\\texttt{CAPACITY}$ строчек содержат последовательность пар ключ-значение (с последующим переносом строки), для данного бакета,\nгде каждая пара записана как $\\texttt{\\textbackslash tKEY VALUE}$, то есть подряд идущие:\n$\\bullet$ символ табуляции ($\\texttt{\\textbackslash t}$, $\\texttt{9}$ в ASCII);\n$\\bullet$ ключ $\\texttt{KEY}$;\n$\\bullet$ символ пробела ($\\texttt{32}$ в ASCII);\n$\\bullet$ значение $\\texttt{VALUE}$.\n\nНапример, если бакет представляет из себя цепочку\n$$(A1, 07) \\rightarrow (A2, 09)  \\rightarrow (A3, 20)$$\nто для него должно быть выведено\n$\\texttt{\tA1 07\tA2 09\tA3 20}$\n\nПример вывода:\n\n$\\texttt{+bar}$\n$\\texttt{2 4}$\n$\\texttt{\t1 baz}$\n\n$\\texttt{\t3 bar}$\n\n$\\texttt{-}$\n$\\texttt{+baz}$",
+    "languages": ["JAVA", "CPP", "PYTHON", "CS", "GO"],
+    "timeLimit": 1000,
+    "memoryLimit": 256,
+    "testArchiveUrl": null,
+    "countOfSuccessSolvers": "0"
+  }
+}
