@@ -68,16 +68,13 @@ type Mapa struct {
 
 func NewMapa() *Mapa {
 
-	buckets := make([]Bucket, 4)
-
-	for i := 0; i < len(buckets); i++ {
-		buckets[i] = Bucket{}
+	m := &Mapa{
+		hashier: *NewHashier(31),
 	}
 
-	return &Mapa{
-		hashier: *NewHashier(33),
-		buckets: buckets,
-	}
+	m.init(4)
+
+	return m
 
 }
 
@@ -136,6 +133,16 @@ func (m *Mapa) Print(out *bufio.Writer) {
 
 }
 
+func (m *Mapa) init(c int) {
+
+	m.buckets = make([]Bucket, c)
+
+	for i := 0; i < len(m.buckets); i++ {
+		m.buckets[i] = Bucket{}
+	}
+
+}
+
 func (m *Mapa) getBucket(key string) int {
 	hash := m.hashier.GetHash(key)
 	return int(hash % uint(m.getCapacity()))
@@ -157,15 +164,11 @@ func (m *Mapa) rebuild() {
 
 	buckets := m.buckets
 
-	m.buckets = make([]Bucket, len(buckets)*2)
+	m.init(len(m.buckets) * 2)
 
-	for i := 0; i < len(m.buckets); i++ {
-		m.buckets[i] = Bucket{}
-	}
-
-	for _, bucket := range buckets {
-		for _, item := range bucket {
-			m.Put(item.Key, item.Value)
+	for i := 0; i < len(buckets); i++ {
+		for j := len(buckets[i]) - 1; j >= 0; j-- {
+			m.Put(buckets[i][j].Key, buckets[i][j].Value)
 		}
 	}
 
