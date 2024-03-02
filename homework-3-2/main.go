@@ -145,7 +145,7 @@ func (m *Mapa) init(c int) {
 
 func (m *Mapa) getBucket(key string) int {
 	hash := m.hashier.GetHash(key)
-	return int(hash % uint(m.getCapacity()))
+	return int(hash % uint64(m.getCapacity()))
 }
 
 func (m *Mapa) getSize() int {
@@ -175,31 +175,31 @@ func (m *Mapa) rebuild() {
 }
 
 type Hashier struct {
-	m uint
+	m uint64
 }
 
-func NewHashier(m uint) *Hashier {
+func NewHashier(m uint64) *Hashier {
 	return &Hashier{
 		m: m,
 	}
 }
 
-func (h *Hashier) GetHash(v string) uint {
+func (h *Hashier) GetHash(v string) uint64 {
 	return h.hashString(v)
 }
 
-func (h *Hashier) hashCharacter(v string) uint {
+func (h *Hashier) hashCharacter(v string) uint64 {
 	return getAsciiCode(v) - 33
 }
 
-func (h *Hashier) hashString(v string) uint {
-	var res float64
+func (h *Hashier) hashString(v string) uint64 {
+	var res uint64
 	for i := range v {
-		res += float64(h.hashCharacter(string(v[i]))) * math.Pow(float64(h.m), float64(len(v)-1-i))
+		res = (uint64(h.m)*res + h.hashCharacter(string(v[i]))) % math.MaxUint64
 	}
-	return uint(res)
+	return res
 }
 
-func getAsciiCode(s string) uint {
-	return uint([]byte(s)[0])
+func getAsciiCode(s string) uint64 {
+	return uint64([]byte(s)[0])
 }

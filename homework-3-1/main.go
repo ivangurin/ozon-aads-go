@@ -79,11 +79,11 @@ func (h *Hashier) hashCharacter(v string) uint64 {
 }
 
 func (h *Hashier) hashString(v string) uint64 {
-	var res float64
+	var res uint64
 	for i := range v {
-		res += float64(h.hashCharacter(string(v[i]))) * math.Pow(float64(h.m), float64(len(v)-1-i))
+		res = (uint64(h.m)*res + h.hashCharacter(string(v[i]))) % math.MaxUint64
 	}
-	return uint64(res)
+	return res
 }
 
 func getAsciiCode(s string) uint64 {
