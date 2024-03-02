@@ -44,7 +44,7 @@ func NewHashier(m uint) *Hashier {
 	}
 }
 
-func (h *Hashier) GetHash(t, v string) uint {
+func (h *Hashier) GetHash(t, v string) uint64 {
 
 	switch t {
 	case "number":
@@ -59,36 +59,33 @@ func (h *Hashier) GetHash(t, v string) uint {
 
 }
 
-func (h *Hashier) hashNumber(v string) uint {
+func (h *Hashier) hashNumber(v string) uint64 {
 
 	num, err := strconv.ParseInt(v, 10, 64)
 	if err != nil {
 		panic(err)
 	}
 
-	var res uint
-	if num >= 0 {
-		res = uint(num)
-	} else {
-		res = math.MaxUint64 - uint(math.Abs(float64(num))) + 1
+	return uint64(num)
+
+}
+
+func (h *Hashier) hashCharacter(v string) uint64 {
+	code := getAsciiCode(v)
+	if code >= 33 && code <= 126 {
+		return getAsciiCode(v) - 33
 	}
-
-	return res
-
+	return 0
 }
 
-func (h *Hashier) hashCharacter(v string) uint {
-	return getAsciiCode(v) - 33
-}
-
-func (h *Hashier) hashString(v string) uint {
+func (h *Hashier) hashString(v string) uint64 {
 	var res float64
 	for i := range v {
 		res += float64(h.hashCharacter(string(v[i]))) * math.Pow(float64(h.m), float64(len(v)-1-i))
 	}
-	return uint(res)
+	return uint64(res)
 }
 
-func getAsciiCode(s string) uint {
-	return uint([]byte(s)[0])
+func getAsciiCode(s string) uint64 {
+	return uint64([]byte(s)[0])
 }
