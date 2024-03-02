@@ -71,11 +71,7 @@ func (h *Hashier) hashNumber(v string) uint64 {
 }
 
 func (h *Hashier) hashCharacter(v string) uint64 {
-	code := getAsciiCode(v)
-	if code >= 33 && code <= 126 {
-		return getAsciiCode(v) - 33
-	}
-	return 0
+	return getAsciiCode(v) - 33
 }
 
 func (h *Hashier) hashString(v string) uint64 {
