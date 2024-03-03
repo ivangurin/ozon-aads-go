@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"os"
 )
 
@@ -195,7 +194,7 @@ func (h *Hashier) hashCharacter(v string) uint64 {
 func (h *Hashier) hashString(v string) uint64 {
 	var res uint64
 	for i := range v {
-		res = (uint64(h.m)*res + h.hashCharacter(string(v[i]))) % math.MaxUint64
+		res = h.m*res + h.hashCharacter(string(v[i]))
 	}
 	return res
 }

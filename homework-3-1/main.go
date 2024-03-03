@@ -3,13 +3,12 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"os"
 	"strconv"
 )
 
 type Hashier struct {
-	m uint
+	m uint64
 }
 
 func main() {
@@ -38,7 +37,7 @@ func Run(in *bufio.Reader, out *bufio.Writer) {
 
 }
 
-func NewHashier(m uint) *Hashier {
+func NewHashier(m uint64) *Hashier {
 	return &Hashier{
 		m: m,
 	}
@@ -77,7 +76,7 @@ func (h *Hashier) hashCharacter(v string) uint64 {
 func (h *Hashier) hashString(v string) uint64 {
 	var res uint64
 	for i := range v {
-		res = (uint64(h.m)*res + h.hashCharacter(string(v[i]))) % math.MaxUint64
+		res = h.m*res + h.hashCharacter(string(v[i]))
 	}
 	return res
 }
