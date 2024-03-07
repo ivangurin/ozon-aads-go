@@ -39,19 +39,22 @@ func Run(in *bufio.Reader, out *bufio.Writer) {
 
 func FindCircle(graph map[int][]int) []int {
 
-	var start int
-	for k := range graph {
-		start = k
-	}
-
-	color := map[int]int{}
-	DFS(start, -1, graph, color)
-
 	res := []int{}
-	for k, v := range color {
-		if v == 2 {
-			res = append(res, k)
+	for k := range graph {
+
+		color := map[int]int{}
+		DFS(k, -1, graph, color)
+
+		for k, v := range color {
+			if v == 2 {
+				res = append(res, k)
+			}
 		}
+
+		if len(res) > 0 {
+			break
+		}
+
 	}
 
 	if len(res) == 0 {
