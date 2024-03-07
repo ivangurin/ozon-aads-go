@@ -133,13 +133,11 @@ func (m *Mapa) Print(out *bufio.Writer) {
 }
 
 func (m *Mapa) init(c int) {
-
 	m.buckets = make([]Bucket, c)
 
 	for i := 0; i < len(m.buckets); i++ {
 		m.buckets[i] = Bucket{}
 	}
-
 }
 
 func (m *Mapa) getBucket(key string) int {
@@ -160,7 +158,6 @@ func (m *Mapa) getCapacity() int {
 }
 
 func (m *Mapa) rebuild() {
-
 	buckets := m.buckets
 
 	m.init(len(m.buckets) * 2)
@@ -170,7 +167,6 @@ func (m *Mapa) rebuild() {
 			m.Put(buckets[i][j].Key, buckets[i][j].Value)
 		}
 	}
-
 }
 
 type Hashier struct {
