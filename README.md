@@ -37,3 +37,9 @@
 [Маршрут 256](homework-5-2/README.md)
 
 [Бэклог](homework-5-3/README.md)
+
+## Домашнее задание 6 (Вычислительно сложные задачи)
+
+[Коробки](homework-6-1/README.md)
+
+[Git на минималках](homework-6-2/README.md)
