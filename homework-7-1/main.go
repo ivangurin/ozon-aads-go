@@ -7,55 +7,50 @@ import (
 )
 
 func main() {
-
 	in := bufio.NewReader(os.Stdin)
 	out := bufio.NewWriter(os.Stdout)
 	defer out.Flush()
 
 	Run(in, out)
-
 }
 
 func Run(in *bufio.Reader, out *bufio.Writer) {
-
 	mapa := NewMapa()
 
 	var n int
 	fmt.Fscanln(in, &n)
 
 	for i := 0; i < n; i++ {
-
-		var command, key, value string
+		var command, key string
 		fmt.Fscan(in, &command)
 
 		switch command {
-		case "put":
-			fmt.Fscan(in, &key, &value)
-			mapa.Put(key, value)
-
-		case "get":
+		case "add":
 			fmt.Fscan(in, &key)
-			value, exists := mapa.Get(key)
+			mapa.Add(key)
+
+		case "remove":
+			fmt.Fscan(in, &key)
+			mapa.Remove(key)
+
+		case "contains":
+			fmt.Fscan(in, &key)
+			exists := mapa.Contains(key)
 			if exists {
-				fmt.Fprintf(out, "+%s\n", value)
+				fmt.Fprint(out, "+\n")
 			} else {
-				fmt.Fprintf(out, "-\n")
+				fmt.Fprint(out, "-\n")
 			}
 
 		case "print":
 			mapa.Print(out)
 
 		}
-
 	}
-
-	fmt.Fscanln(in)
-
 }
 
 type BucketItem struct {
-	Key   string
-	Value string
+	Key string
 }
 
 type Bucket []*BucketItem
@@ -70,59 +65,63 @@ func NewMapa() *Mapa {
 	return m
 }
 
-func (m *Mapa) Put(key, value string) {
+func (m *Mapa) Add(key string) {
+	bucketNumber := m.getBucket(key)
 
-	backet := m.getBucket(key)
-
-	for _, item := range m.buckets[backet] {
+	for _, item := range m.buckets[bucketNumber] {
 		if item.Key == key {
-			item.Value = value
 			return
 		}
 	}
 
-	m.buckets[backet] = append(m.buckets[backet], &BucketItem{
-		Key:   key,
-		Value: value,
+	m.buckets[bucketNumber] = append(m.buckets[bucketNumber], &BucketItem{
+		Key: key,
 	})
 
 	if float64(m.getSize())/float64(m.getCapacity()) >= 0.75 {
 		m.rebuild()
 	}
-
 }
 
-func (m *Mapa) Get(key string) (string, bool) {
+func (m *Mapa) Contains(key string) bool {
+	bucketNumber := m.getBucket(key)
 
-	backet := m.getBucket(key)
-
-	for _, item := range m.buckets[backet] {
+	for _, item := range m.buckets[bucketNumber] {
 		if item.Key == key {
-			return item.Value, true
+			return true
 		}
 	}
 
-	return "", false
+	return false
+}
 
+func (m *Mapa) Remove(key string) {
+	bucketNumber := m.getBucket(key)
+
+	for ind, item := range m.buckets[bucketNumber] {
+		if item.Key == key {
+			bucket := Bucket{}
+			bucket = append(bucket, m.buckets[bucketNumber][:ind]...)
+			bucket = append(bucket, m.buckets[bucketNumber][ind+1:]...)
+			m.buckets[bucketNumber] = bucket
+			return
+		}
+	}
 }
 
 func (m *Mapa) Print(out *bufio.Writer) {
-
 	fmt.Fprintln(out, m.getSize(), m.getCapacity())
 
 	for _, bucket := range m.buckets {
-
 		if len(bucket) == 0 {
 			fmt.Fprintln(out)
 		} else {
 			for _, item := range bucket {
-				fmt.Fprintf(out, "\t%s %s", item.Key, item.Value)
+				fmt.Fprintf(out, " %s", item.Key)
 			}
 			fmt.Fprintf(out, "\n")
 		}
-
 	}
-
 }
 
 func (m *Mapa) init(c int) {
@@ -140,8 +139,8 @@ func (m *Mapa) getBucket(key string) int {
 
 func (m *Mapa) getSize() int {
 	var res int
-	for _, backet := range m.buckets {
-		res += len(backet)
+	for _, bucket := range m.buckets {
+		res += len(bucket)
 	}
 	return res
 }
@@ -157,7 +156,7 @@ func (m *Mapa) rebuild() {
 
 	for i := 0; i < len(buckets); i++ {
 		for j := len(buckets[i]) - 1; j >= 0; j-- {
-			m.Put(buckets[i][j].Key, buckets[i][j].Value)
+			m.Add(buckets[i][j].Key)
 		}
 	}
 }

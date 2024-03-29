@@ -43,3 +43,9 @@
 [Коробки](homework-6-1/README.md)
 
 [Git на минималках](homework-6-2/README.md)
+
+## Домашнее задание 7 (Вычислительно сложные задачи. Часть 2)
+
+[Хеш-множество с закрытой адресацией](homework-7-1/README.md)
+
+[Min-Hash](homework-7-2/README.md)

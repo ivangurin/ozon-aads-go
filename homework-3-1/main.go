@@ -59,14 +59,12 @@ func (h *Hashier) GetHash(t, v string) uint64 {
 }
 
 func (h *Hashier) hashNumber(v string) uint64 {
-
 	num, err := strconv.ParseInt(v, 10, 64)
 	if err != nil {
 		panic(err)
 	}
 
 	return uint64(num)
-
 }
 
 func (h *Hashier) hashCharacter(v string) uint64 {

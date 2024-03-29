@@ -1,0 +1,9 @@
+8
+add foo
+add bar
+print
+contains foo
+add baz
+remove bar
+print
+contains baz
